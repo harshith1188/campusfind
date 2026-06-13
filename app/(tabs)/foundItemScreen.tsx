@@ -1,4 +1,5 @@
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { Label } from "@react-navigation/elements";
 import * as ImagePicker from 'expo-image-picker';
 import { useState } from "react";
@@ -6,10 +7,17 @@ import { Image, ImageBackground, ScrollView, StyleSheet, Text, TextInput, Toucha
 import { Dropdown } from "react-native-element-dropdown";
 import ImageViewing from "react-native-image-viewing";
 import { SafeAreaView } from "react-native-safe-area-context";
+
 export  default function FoundItems() {
     const [cate,setcate]=useState(null);
     const [image,setImage]=useState(null);
     const[visible,setvisible]=useState(false);    
+    const [date, setDate] = useState(new Date());
+    const[time,setTime]=useState(new Date());
+    const [showDatePicker, setShowDatePicker] = useState(false);
+    const [showTimePicker, setShowTimePicker] = useState(false);
+
+
     //catgeory array of objects for dropdown
     const catogeries=[
         {label:'Mobile', value:'electronics'},
@@ -36,6 +44,23 @@ export  default function FoundItems() {
             setImage(result.assets[0].uri);
         }
     }
+
+    //date picker function
+    const onChangeDate = (event, selectedDate) => {
+    setShowDatePicker(false);
+    if (selectedDate) {
+    setDate(selectedDate);
+      }
+    };
+
+    //time picker function
+    const onChangeTime=(event,selectedTime)=>{
+        setShowTimePicker(false);
+        if(selectedTime){
+            setTime(selectedTime);
+        }
+    };
+
 
     return(
         
@@ -117,13 +142,36 @@ export  default function FoundItems() {
             style={[styles.input, styles.textArea]}/>
 
             <Label style={styles.label}><MaterialIcons name="date-range" size={28}/>Date Found</Label>
-            <TextInput placeholder="Enter the date found" style={styles.input} placeholderTextColor={"rgb(0, 102, 255)"} />
+            <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.input}>
+                <Text  style={{color: date ? 'black' : 'rgb(0, 102, 255)', fontSize:16}}>{date ? date.toLocaleDateString() : ('Select Date')}</Text>
+            </TouchableOpacity>
+            
+            {showDatePicker && (
+            <DateTimePicker
+                value={date}
+                mode="date"
+                display="default"
+                onChange={onChangeDate}
+                maximumDate={new Date()}/>
+            )}
 
             <Label style={styles.label}><MaterialIcons name="phone" size={28}/>Contact Information</Label>
             <TextInput placeholder="Enter your contact information"  maxLength={10} style={styles.input} placeholderTextColor={"rgb(0, 102, 255)"} />
 
             <Label style={styles.label}><MaterialIcons name="timer" size={28}/>Time Found (optional)</Label>
-            <TextInput placeholder="Enter the time found" style={styles.input} placeholderTextColor={"rgb(0, 102, 255)"} />
+            <TouchableOpacity onPress={()=>setShowTimePicker(true)} style={styles.input}>
+                <Text style={{color: time ? 'black' : 'rgb(0, 102, 255)', fontSize:16}}>{time ? time.toLocaleTimeString() : ('Select Time')}</Text>
+            </TouchableOpacity>
+            {showTimePicker && (
+                <DateTimePicker
+                   value={time}
+                   mode="time"
+                   display="clock"
+                   onChange={onChangeTime}
+                   />
+            )}
+        
+        
             </View>
 
             {/* b4 */}
@@ -176,7 +224,7 @@ const styles=StyleSheet.create({
     },
     b2:{
         minHeight:200,
-        backgroundColor:'rgba(39, 139, 221, 0.4)',
+        backgroundColor:'rgba(39, 139, 221, 0.2)',
         width:"100%",
         borderRadius:20,
         alignItems:'center',
@@ -185,7 +233,7 @@ const styles=StyleSheet.create({
     },
     b3:{
         minHeight:1300,
-        backgroundColor:'rgba(39, 139, 221, 0.4)',
+        backgroundColor:'rgba(39, 139, 221, 0.2)',
         width:"100%",
         alignItems:'center',
         justifyContent:'space-evenly',      
@@ -197,6 +245,8 @@ const styles=StyleSheet.create({
         borderRadius:10,
         textAlign:'center',
         fontSize:16,
+        alignItems:'center',
+        justifyContent:'center',
         backgroundColor: "rgba(255,255,255,0.8)",
     },
     label:{
@@ -212,7 +262,7 @@ const styles=StyleSheet.create({
   b4:{
     minHeight:100,
     width:"100%",
-    backgroundColor:'rgba(39, 139, 221, 0.4)',
+    backgroundColor:'rgba(39, 139, 221, 0.2)',
     borderRadius:20,
     flexDirection:'row',
     alignItems:'center',
