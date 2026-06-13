@@ -2,11 +2,15 @@ import { Stack } from 'expo-router';
 
 export default function Layout() {
   return (
-      <Stack initialRouteName='editScreen'>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
+        
+      <Stack initialRouteName="splashscreen">
+        <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
+        <Stack.Screen name="regsiterScreen" options={{headerShown:false}}/> 
+        <Stack.Screen name="splashscreen" options={{ headerShown: false }}/>
+        <Stack.Screen name="powerbyscreen" options={{ headerShown: false }}/>
         <Stack.Screen name="loginScreen"  options={{ headerShown: false }} />
         <Stack.Screen name="editScreen"  options={{ headerShown: false }} />
       </Stack>
+    
   );
 }

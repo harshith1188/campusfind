@@ -88,8 +88,7 @@ export default function  EditScreen(){
                     <Label style={styles.h3}>Name</Label>
                     <Dropdown
                     search 
-                      styl
-                      e={styles.drop_down}
+                      style={styles.drop_down}
                       data={department}
                       labelField="Label"
                       placeholder="Select Department"
