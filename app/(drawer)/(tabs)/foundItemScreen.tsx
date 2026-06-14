@@ -65,7 +65,7 @@ export  default function FoundItems() {
     return(
         
         <ImageBackground 
-        source={require("../../assets/images/found_lost_screen_bg.png")}
+        source={require("../../../assets/images/found_lost_screen_bg.png")}
         style={{flex:1}}
         resizeMode="cover">
         <SafeAreaView style={{flex:1}}>
