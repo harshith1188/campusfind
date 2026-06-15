@@ -10,6 +10,7 @@ export default function Layout() {
         <Stack.Screen name="powerbyscreen" options={{ headerShown: false }}/>
         <Stack.Screen name="loginScreen"  options={{ headerShown: false }} />
         <Stack.Screen name="editScreen"  options={{ headerShown: false }} />
+        <Stack.Screen name="about"  options={{ headerShown: false }} />
       </Stack>
     
   );
