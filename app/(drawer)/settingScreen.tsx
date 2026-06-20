@@ -45,7 +45,7 @@ export default function SettingScreen(){
               <MaterialIcons name="help-center" size={28} color={"rgb(0, 102, 255)"}/>
             </View>
                <Text style={styles.h3}>Help & Support</Text>
-            <TouchableOpacity style={styles.b2_icon2}>
+            <TouchableOpacity style={styles.b2_icon2} onPress={()=>{router.navigate("/help_support")}}>
               <MaterialIcons name="navigate-next" size={28} color={"rgb(0, 102, 255)"}/>
             </TouchableOpacity>
           </View>

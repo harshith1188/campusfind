@@ -109,12 +109,13 @@ export default  function About(){
 
                     </TouchableOpacity>
                         
-
+                    <Text style={[styles.h2,{color:'rgb(0, 102, 255)'}]}>All Rights Reserved</Text>
             </ScrollView>
          </SafeAreaView>
         </ImageBackground>
     )
 }
+
 
 const styles=StyleSheet.create({
     b1:{

@@ -11,6 +11,9 @@ export default function Layout() {
         <Stack.Screen name="loginScreen"  options={{ headerShown: false }} />
         <Stack.Screen name="editScreen"  options={{ headerShown: false }} />
         <Stack.Screen name="about"  options={{ headerShown: false }} />
+        <Stack.Screen name="help_support"  options={{ headerShown: false }} />
+        <Stack.Screen name="faqsScreen"  options={{ headerShown: false }} />
+      <Stack.Screen name="contactScreen"  options={{ headerShown: false }} />
       </Stack>
     
   );
