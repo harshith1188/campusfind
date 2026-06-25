@@ -1,9 +1,83 @@
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BlurView } from "expo-blur";
-import { Image, ImageBackground, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { router } from "expo-router";
+import { useState } from "react";
+import { Alert, Image, ImageBackground, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { registerUser } from "./firebase/auth";
+
 
 export default function RegisterScreen(){
+const[name,setName]=useState('');
+const[email,setEmail]=useState('');
+const[usn,setUsn]=useState('');
+const[pass,setPass]=useState('');
+const[cpass,setCpass]=useState('');
+const regexusn=/^1rr(23|24|25|26)(cs|is|ec|ee)\d{3}$/i;
+const emailRegex =/^[a-z]+[a-z0-9]*202[3-7](cse|ise|eee|ece)rrce@gmail\.com$/i;
+const  handleRegsiter=async()=>{
+  let  converted_email=email.toLowerCase();
+
+  await AsyncStorage.setItem('loggin','false');
+   let converted_usn=usn.toLowerCase();
+  if(!name || !email ||!pass || !cpass || !usn){
+      Alert.alert(
+        'Error',
+        'Fill all the Fields'
+      )
+      return
+  }
+  else if(!emailRegex.test(converted_email)){
+     Alert.alert(
+      'Invalid Email',
+      'email must be in the format  name+initial+passoutyear+branch+rrce@gmail.com  \n\n Eg:harshithkc2027cserrce@gmail.com'
+     )
+       return
+  }
+  else if(!regexusn.test(converted_usn)){
+    Alert.alert(
+      "Invalid USN",
+      "usn must be like  1rr23cs047 etc"
+    );
+    return
+  }
+  else if(pass.length<=6){
+    Alert.alert(
+      'Password length error',
+      'password length must be greater than 7'      
+    )
+     return
+  }
+  else if(pass!=cpass){
+
+    Alert.alert(
+      'Password Error',
+      'confirm password not matching with the password'
+    )
+    return
+  }
+
+  else{
+    try{
+      await registerUser(email,pass);
+      Alert.alert(
+        'Email  verification',
+        '6 digit code has been sent to the specified email'
+      )
+      router.replace('/codeConfirm');
+    }
+    catch(error:any){
+      Alert.alert(
+        "Registration failed",
+        error.message
+      )
+    }
+  }
+
+
+}
+
   return(
 
     <ImageBackground source={require("../assets/images/found_lost_screen_bg.png")}
@@ -23,40 +97,40 @@ export default function RegisterScreen(){
             
             <View style={styles.demo}>
               <MaterialIcons name="person" size={28}/>
-            <TextInput style={styles.t1} placeholder="Enter Your Full Name"/>
+            <TextInput style={styles.t1} placeholder="Enter Your Full Name" value={name}  onChangeText={setName}/>
             </View>
 
             <View style={styles.demo}>
               <MaterialIcons name="email" size={28}/>
               <TextInput 
-             style={styles.t1}placeholder=" Enter Your College Email"/>
+             style={styles.t1}placeholder=" Enter Your College Email"  value={email}  onChangeText={setEmail}    />
              </View>
 
               <View style={styles.demo}>
                 <MaterialIcons name="school" size={28}/>
-              <TextInput style={styles.t1}placeholder="Enter Your USN"/>
+              <TextInput style={styles.t1}placeholder="Enter Your USN" value={usn} onChangeText={setUsn}  />
                </View>
 
               <View style={styles.demo}>
                 <MaterialIcons name="lock-outline" size={28}/>
-               <TextInput style={styles.t1}placeholder=" Create a Password"/>
+               <TextInput style={styles.t1}placeholder=" Create a Password" value={pass} onChangeText={setPass} secureTextEntry />
                 </View>
 
                <View style={styles.demo}>
                 <MaterialIcons name="lock-outline" size={28}/>
-                <TextInput style={styles.t1}placeholder="Confirm Password"/>
+                <TextInput style={styles.t1}placeholder="Confirm Password" value={cpass} onChangeText={setCpass} secureTextEntry  />
                  </View>
 
                 
 
-               <TouchableOpacity style={styles.btn1}>
+               <TouchableOpacity style={styles.btn1}  onPress={handleRegsiter}>
                 <Text style={{color:'white', fontSize:20, fontWeight:'bold'}}> <Text><MaterialIcons name="login" size={25}/> Sign Up</Text></Text>
                 </TouchableOpacity> 
 
                 
 
                
-                 <Text style={styles.text1}>Already have an account? <Text style={{color:'rgb(0, 102, 255)', fontWeight:'bold'}}>Sign In</Text></Text>
+                 <Text style={styles.text1}>Already have an account? <Text style={{color:'rgb(0, 102, 255)', fontWeight:'bold'}} onPress={()=>{router.navigate('/loginScreen')}}>Sign In</Text></Text>
 
                 
 
@@ -101,6 +175,7 @@ const styles=StyleSheet.create({
   t1:{
     height:50,
     width:"95%",
+    padding:15,
     borderWidth:1,
     borderRadius:5,
     backgroundColor:"rgba(255,255,255,0.7)"

@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
@@ -6,8 +7,16 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function SettingScreen(){
     useFocusEffect(
         useCallback(()=>{
-            const timer=setTimeout(()=>{
-            router.replace("/(drawer)/(tabs)/foundItemScreen")
+            const timer=setTimeout(async()=>{
+             let user_detail=  await AsyncStorage.getItem('loggin');
+             console.log(user_detail);
+
+             if(user_detail === 'true'){
+                  router.replace("/(drawer)/(tabs)/foundItemScreen")
+             }
+             else{
+               router.replace('/registerScreen');
+             }
             },3000)
         return()=>clearTimeout(timer)
         },[])

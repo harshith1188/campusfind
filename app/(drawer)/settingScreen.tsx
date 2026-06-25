@@ -1,9 +1,46 @@
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
-import { ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { logoutUser } from "../firebase/auth";
 
 export default function SettingScreen(){
+
+  const asklogout=()=>{
+    
+    Alert.alert(
+      "LOG OUT",
+      "Do you want to  logout ?",
+      [
+        {
+          text:'cancel',
+          style:'cancel'
+        },
+        {
+          text:'log out',
+          style:'destructive',
+          onPress:handlelogout
+        }
+      ]
+    )
+
+  }
+
+
+  const  handlelogout=async()=>{
+    try{
+      await logoutUser
+       await AsyncStorage.setItem('loggin','false');
+       router.replace('/loginScreen');
+    }
+    catch(error){
+      console.log(error);
+  }
+ 
+}
+
+
   return(
     <ImageBackground 
       source={require("../../assets/images/found_lost_screen_bg.png")}
@@ -65,8 +102,8 @@ export default function SettingScreen(){
             <View style={styles.b2_icon1}>
               <MaterialIcons name="logout" size={28} color={"red"}/>
             </View>
-               <Text style={styles.h3}>Logout</Text>
-            <TouchableOpacity style={styles.b2_icon2}>
+               <Text style={styles.h3} >Logout</Text>
+            <TouchableOpacity style={styles.b2_icon2} onPress={asklogout}>
               <MaterialIcons name="navigate-next" size={28} color={"red"}/>
             </TouchableOpacity>
           </View>
