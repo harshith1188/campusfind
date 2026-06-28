@@ -72,7 +72,7 @@ export default function SettingScreen(){
               <MaterialIcons name="lock" size={28} color={"rgb(0, 102, 255)"}/>
             </View>
                <Text style={styles.h3}>Privacy & Security</Text>
-            <TouchableOpacity style={styles.b2_icon2}>
+            <TouchableOpacity style={styles.b2_icon2} onPress={()=>{router.navigate('/biometricSetScreen')}}>
               <MaterialIcons name="navigate-next" size={28} color={"rgb(0, 102, 255)"}/>
             </TouchableOpacity>
           </View>

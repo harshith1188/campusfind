@@ -69,7 +69,7 @@ export  default function FoundItems() {
         style={{flex:1}}
         resizeMode="cover">
         <SafeAreaView style={{flex:1}}>
-            <ScrollView style={{flex:1}} nestedScrollEnabled={true} contentContainerStyle={{alignItems:'center', justifyContent:'center',padding:20,gap:30}}>
+            <ScrollView style={{flex:1}} nestedScrollEnabled={true} contentContainerStyle={{alignItems:'center', justifyContent:'center',padding:20,gap:30,paddingBottom:180}}>
             {/* b1 */}
             <View style={styles.b1}>
             <Text style={styles.h1}>Found an Item ?</Text>

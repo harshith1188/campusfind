@@ -7,8 +7,9 @@ export  default function Contact(){
         <ImageBackground  style={{flex:1}} source={require('../assets/images/contactScreen.png')}>
             <SafeAreaView style={{flex:1}}>
                 <ScrollView  style={{flex:1}} contentContainerStyle={{flex:1, justifyContent:'space-evenly',alignItems:'center',gap:10,padding:10}} >
-                    
+                    {/* main  conatiner */}
                   <View style={styles.container}>  
+                    {/* email  box */}
                     <View style={styles.b1}>
                         <View style={styles.b1_icon}>
                             <MaterialIcons  name="email"  size={28} color={"rgb(0, 102, 255)"}  />
@@ -19,6 +20,7 @@ export  default function Contact(){
                         </View>
                     </View>
 
+                      {/* phone  box */}
                     <View style={styles.b1}>
                         <View style={styles.b1_icon}>
                             <MaterialIcons  name="phone"  size={28} color={"rgb(0, 102, 255)"}  />
@@ -28,7 +30,9 @@ export  default function Contact(){
                             <Text style={styles.h3}>+91 8792883855</Text>
                         </View>
                     </View>
+
                 </View>
+                {/* closing main container */}
                 </ScrollView>
             </SafeAreaView>
         </ImageBackground>

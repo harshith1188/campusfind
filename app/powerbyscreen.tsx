@@ -9,13 +9,17 @@ export default function SettingScreen(){
         useCallback(()=>{
             const timer=setTimeout(async()=>{
              let user_detail=  await AsyncStorage.getItem('loggin');
+             let Biometric=await  AsyncStorage.getItem('biometric');
              console.log(user_detail);
 
-             if(user_detail === 'true'){
-                  router.replace("/(drawer)/(tabs)/foundItemScreen")
+             if(user_detail === 'false'){
+                  router.replace("/loginScreen")
              }
-             else{
-               router.replace('/registerScreen');
+             else  if(Biometric==='true'){
+               router.replace('/biometric');
+             }
+             else if(user_detail==='true' && Biometric==='false'){
+                router.replace('/(drawer)/(tabs)');
              }
             },3000)
         return()=>clearTimeout(timer)

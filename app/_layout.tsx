@@ -15,6 +15,9 @@ export default function Layout() {
         <Stack.Screen name="faqsScreen"  options={{ headerShown: false }} />
       <Stack.Screen name="contactScreen"  options={{ headerShown: false }} />
       <Stack.Screen name="codeConfirm"  options={{ headerShown: false }} />
+      <Stack.Screen name="biometricSetScreen"  options={{ headerShown: false }} />
+      <Stack.Screen name="biometric"  options={{ headerShown: false }} />
+          
       </Stack>
     
   );
