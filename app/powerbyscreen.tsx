@@ -7,7 +7,7 @@ export default function SettingScreen(){
     useFocusEffect(
         useCallback(()=>{
             const timer=setTimeout(()=>{
-            router.replace("/RegisterScreen")
+            router.replace("/(drawer)/(tabs)")
             },3000)
         return()=>clearTimeout(timer)
         },[])

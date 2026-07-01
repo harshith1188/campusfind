@@ -120,9 +120,9 @@ const styles=StyleSheet.create({
     borderRadius:10,
     alignItems:'center',
     justifyContent:'center',
-     marginTop:20,
-      borderWidth:1,
-      borderColor:'rgba(255,255,255,0.8)'
+    marginTop:20,
+    borderWidth:1,
+    borderColor:'rgba(255,255,255,0.8)'
     
   },
   h2:{
