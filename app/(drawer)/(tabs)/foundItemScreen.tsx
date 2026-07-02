@@ -3,7 +3,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { Label } from "@react-navigation/elements";
 import * as ImagePicker from 'expo-image-picker';
 import { useState } from "react";
-import { Image, ImageBackground, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, Image, ImageBackground, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import ImageViewing from "react-native-image-viewing";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -17,6 +17,30 @@ export  default function FoundItems() {
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showTimePicker, setShowTimePicker] = useState(false);
 
+//  user input states
+    const[itm_name,setitm_name]=useState('');
+    const[itm_loc,setitm_loc]=useState('');
+    const[itm_des,setitm_des]=useState('');
+    const[c_num,setc_num]=useState('');
+
+
+
+ const handleinputs=async()=>{
+    if(!itm_name || !cate || !itm_loc || !itm_des || !c_num){
+        Alert.alert(
+            "Error",
+            "Fill all the necessary fileds"
+        )
+        return
+    }
+    else{
+        Alert.alert(
+            "Success",
+            "response  submitted"
+        )
+    }
+
+ }   
 
     //catgeory array of objects for dropdown
     const catogeries=[
@@ -110,13 +134,12 @@ export  default function FoundItems() {
             <Text style={styles.h1}>Additional Information</Text>
             
             <Label style={styles.label}><MaterialIcons name="inbox" size={28}/>Item Name</Label>
-            <TextInput placeholder="Enter the name of the item" style={styles.input} placeholderTextColor={"rgb(0, 102, 255)"} />
+            <TextInput placeholder="Enter the name of the item" style={styles.input} placeholderTextColor={"rgb(0, 102, 255)"} 
+            value={itm_name}  onChangeText={setitm_name}/>
             
-            <Label style={styles.label}><MaterialIcons name="category" size={28}/>Item Category</Label>
-            <TextInput placeholder="Enter the category of the item" style={styles.input} placeholderTextColor={"rgb(0, 102, 255)"} />
-        
+           
             <Label style={styles.label}><MaterialIcons name="location-on" size={28}/>Found Location</Label>
-            <TextInput placeholder="Enter the location" style={styles.input} placeholderTextColor={"rgb(0, 102, 255)"} />
+            <TextInput placeholder="Enter the location" style={styles.input} placeholderTextColor={"rgb(0, 102, 255)"} value={itm_loc}  onChangeText={setitm_loc} />
             
             <Label style={styles.label}><MaterialIcons name="category" size={28}/>Item Category</Label>
             
@@ -139,6 +162,8 @@ export  default function FoundItems() {
             multiline
             numberOfLines={4}
             textAlignVertical="top"
+            value={itm_des}
+            onChangeText={setitm_des}
             style={[styles.input, styles.textArea]}/>
 
             <Label style={styles.label}><MaterialIcons name="date-range" size={28}/>Date Found</Label>
@@ -156,7 +181,7 @@ export  default function FoundItems() {
             )}
 
             <Label style={styles.label}><MaterialIcons name="phone" size={28}/>Contact Information</Label>
-            <TextInput placeholder="Enter your contact information"  maxLength={10} style={styles.input} placeholderTextColor={"rgb(0, 102, 255)"} />
+            <TextInput placeholder="Enter your contact information"  maxLength={10} style={styles.input} placeholderTextColor={"rgb(0, 102, 255)"}  keyboardType="number-pad"  value={c_num}  onChangeText={setc_num} />
 
             <Label style={styles.label}><MaterialIcons name="timer" size={28}/>Time Found (optional)</Label>
             <TouchableOpacity onPress={()=>setShowTimePicker(true)} style={styles.input}>
@@ -186,7 +211,7 @@ export  default function FoundItems() {
             </View>    
 
             {/* b5     */}
-            <TouchableOpacity style={[styles.btn,{backgroundColor:'rgb(0, 102, 255)', marginRight:20}]}>
+            <TouchableOpacity style={[styles.btn,{backgroundColor:'rgb(0, 102, 255)', marginRight:20}]} onPress={handleinputs} >
                 <Text style={{color:'white', fontSize:20, fontWeight:'bold'}}><Text><MaterialIcons name="post-add" size={25}/> Post Item</Text></Text>
             </TouchableOpacity>
 
