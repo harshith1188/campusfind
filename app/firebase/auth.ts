@@ -1,11 +1,12 @@
 import { auth } from '../firebase/config';
 
 import {
-    createUserWithEmailAndPassword,
-    sendEmailVerification,
-    signInWithEmailAndPassword,
-    signOut,
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  signInWithEmailAndPassword,
+  signOut,
 } from "firebase/auth";
+
 
 // register  screen
 export const registerUser=async(email:string,password:string)=>{
@@ -13,6 +14,7 @@ export const registerUser=async(email:string,password:string)=>{
     await sendEmailVerification(userCredential.user);
     return  userCredential
 }
+
 
 // Login User
 export const loginUser = async (
@@ -26,12 +28,17 @@ export const loginUser = async (
   );
 };
 
+
+
 // Logout User
 export const logoutUser = async () => {
   await signOut(auth);
 };
 
+
 // Get Current User
 export const getCurrentUser = () => {
   return auth.currentUser;
 };
+
+

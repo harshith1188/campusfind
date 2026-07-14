@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Alert, Image, ImageBackground, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { registerUser } from "./firebase/auth";
-
+import { addUser, getdepartment } from "./firebase/firestore";
 
 export default function RegisterScreen(){
 const[name,setName]=useState('');
@@ -14,14 +14,22 @@ const[email,setEmail]=useState('');
 const[usn,setUsn]=useState('');
 const[pass,setPass]=useState('');
 const[cpass,setCpass]=useState('');
-const regexusn=/^1rr(23|24|25|26)(cs|is|ec|ee)\d{3}$/i;
-const emailRegex =/^[a-z]+[a-z0-9]*202[3-7](cse|ise|eee|ece)rrce@gmail\.com$/i;
+const[num,setnum]=useState('');
+const[year,setyear]=useState('');
+const regexusn = /^1rr(23|24|25|26)(cs|is|ec|ee)\d{3}$/i;
+const emailRegex =/^[a-z]+[a-z0-9]*1rr(23|24|25|26)(cs|is|ec|ee)\d{3}rrce@gmail\.com$/i;
+const mobileRegex = /^[6-9]\d{9}$/;
+const passwordRegex =/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^()_\-+=])[A-Za-z\d@$!%*?&#^()_\-+=]{8,}$/;
+
+
+
 const  handleRegsiter=async()=>{
   let  converted_email=email.toLowerCase();
-
   await AsyncStorage.setItem('loggin','false');
    let converted_usn=usn.toLowerCase();
-  if(!name || !email ||!pass || !cpass || !usn){
+   let extracted_usn=converted_email.match(/1rr(23|24|25|26)(cs|is|ec|ee)\d{3}/i)?.[0];
+
+  if(!name || !email ||!pass || !cpass || !usn|| !num){
       Alert.alert(
         'Error',
         'Fill all the Fields'
@@ -31,7 +39,7 @@ const  handleRegsiter=async()=>{
   else if(!emailRegex.test(converted_email)){
      Alert.alert(
       'Invalid Email',
-      'email must be in the format  name+initial+passoutyear+branch+rrce@gmail.com  \n\n Eg:harshithkc2027cserrce@gmail.com'
+      'email must be in the format  name+initial+usn+rrce@gmail.com  \n\n Eg:harshithkc1rr23cse047rrce@gmail.com'
      )
        return
   }
@@ -39,16 +47,22 @@ const  handleRegsiter=async()=>{
     Alert.alert(
       "Invalid USN",
       "usn must be like  1rr23cs047 etc"
-    );
+    )
     return
   }
-  else if(pass.length<=6){
-    Alert.alert(
-      'Password length error',
-      'password length must be greater than 7'      
-    )
-     return
-  }
+ else if (!passwordRegex.test(pass)) {
+  Alert.alert(
+    "Weak Password",
+    "Password must contain:\n\n" +
+    "• At least 8 characters\n" +
+    "• One uppercase letter (A-Z)\n" +
+    "• One lowercase letter (a-z)\n" +
+    "• One number (0-9)\n" +
+    "• One special character (@$!%*?&# etc.)"
+  );
+  return;
+}
+
   else if(pass!=cpass){
 
     Alert.alert(
@@ -58,9 +72,36 @@ const  handleRegsiter=async()=>{
     return
   }
 
+  else if(!mobileRegex.test(num)){
+    Alert.alert(
+      'Invalid phone  number',
+      'enter a valid Indian 10 digit mobile number'
+    )
+    return
+  }
+  else if (converted_usn !== extracted_usn) {
+    Alert.alert(
+      "USN Mismatch",
+      "The USN entered does not match the USN present in your college email."
+    );
+    return;
+  }
+ 
   else{
     try{
-      await registerUser(email,pass);
+      const usercreadentials=await registerUser(email,pass);
+      const user=usercreadentials.user
+      let dept=getdepartment(converted_email);
+      console.log(user);
+      await addUser(
+        user.uid,
+        name,
+        email,
+        num,
+        converted_usn,
+        dept,
+      );
+
       Alert.alert(
         'Email  verification',
         '6 digit code has been sent to the specified email'
@@ -72,6 +113,7 @@ const  handleRegsiter=async()=>{
         "Registration failed",
         error.message
       )
+      console.log(error.message);
     }
   }
 
@@ -111,9 +153,15 @@ const  handleRegsiter=async()=>{
               <TextInput style={styles.t1}placeholder="Enter Your USN" value={usn} onChangeText={setUsn}  />
                </View>
 
+                 <View style={styles.demo}>
+                <MaterialIcons name="phone" size={28}/>
+              <TextInput style={styles.t1}placeholder="Enter mobile no" value={num} onChangeText={setnum} keyboardType="number-pad" maxLength={10}  />
+               </View>
+
+
               <View style={styles.demo}>
                 <MaterialIcons name="lock-outline" size={28}/>
-               <TextInput style={styles.t1}placeholder=" Create a Password" value={pass} onChangeText={setPass} secureTextEntry />
+               <TextInput style={styles.t1}placeholder=" Create a Password" value={pass} onChangeText={setPass}  />
                 </View>
 
                <View style={styles.demo}>

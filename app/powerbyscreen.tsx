@@ -1,55 +1,81 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router, useFocusEffect } from "expo-router";
+import { onAuthStateChanged } from "firebase/auth";
 import { useCallback } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function SettingScreen(){
-    useFocusEffect(
-        useCallback(()=>{
-            const timer=setTimeout(async()=>{
-             let user_detail=  await AsyncStorage.getItem('loggin');
-             let Biometric=await  AsyncStorage.getItem('biometric');
-             console.log(user_detail);
+import { auth } from "./firebase/config";
 
-             if(user_detail === 'false'){
-                  router.replace("/loginScreen")
-             }
-             else  if(Biometric==='true'){
-               router.replace('/biometric');
-             }
-             else if(user_detail==='true' && Biometric==='false'){
-                router.replace('/(drawer)/(tabs)');
-             }
-            },3000)
-        return()=>clearTimeout(timer)
-        },[])
-    );
-  return(
-    <SafeAreaView style={{flex:1,alignItems:"center",justifyContent:"center"}}>
+export default function SettingScreen() {
+
+  useFocusEffect(
+    useCallback(() => {
+
+      const timer = setTimeout(async () => {
+
+        const login = await AsyncStorage.getItem("loggin");
+        const biometric = await AsyncStorage.getItem("biometric");
+
+        if (login !== "true") {
+          router.replace("/loginScreen");
+          return;
+        }
+
+        // Wait until Firebase restores the user
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+
+          unsubscribe();
+
+          if (!user) {
+            router.replace("/loginScreen");
+            return;
+          }
+
+          if (biometric === "true") {
+            router.replace("/biometric");
+          } else {
+            router.replace("/(drawer)/(tabs)");
+          }
+
+        });
+
+      }, 3000);
+
+      return () => clearTimeout(timer);
+
+    }, [])
+  );
+
+  return (
+    <SafeAreaView style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <View style={styles.container}>
         <Text style={styles.h1}>Powered By</Text>
-        <Image source={require("../assets/images/our_logo.png")}
-        style={{width: 300, height: 300,borderRadius:10,borderWidth:0.3}}/>
-        
+
+        <Image
+          source={require("../assets/images/our_logo.png")}
+          style={{
+            width: 300,
+            height: 300,
+            borderRadius: 10,
+            borderWidth: 0.3,
+          }}
+        />
       </View>
     </SafeAreaView>
-
-  )
+  );
 }
 
-const styles=StyleSheet.create({
-    container:{
-       width:"90%",
-       height:400,
-       alignItems:"center",
-       justifyContent:"space-evenly",
-       borderRadius:5
-    },
-    h1:{
-        fontSize:40,
-        textTransform:'capitalize',
-        fontWeight:'bold',
-    }
-})
-    
+const styles = StyleSheet.create({
+  container: {
+    width: "90%",
+    height: 400,
+    alignItems: "center",
+    justifyContent: "space-evenly",
+    borderRadius: 5,
+  },
+  h1: {
+    fontSize: 40,
+    fontWeight: "bold",
+  },
+});

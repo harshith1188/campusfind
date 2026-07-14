@@ -6,6 +6,8 @@ import { useState } from "react";
 import { Alert, Image, ImageBackground, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { loginUser } from "./firebase/auth";
+import { auth } from "./firebase/config";
+
 export default function LoginScreen() {
  const[email,setEmail]=useState("");
  const[password,setpassword]=useState("");
@@ -26,7 +28,9 @@ export default function LoginScreen() {
     const userCredential = await loginUser(email,password);
     const user=userCredential.user
     await user.reload();
-
+    console.log("userid",user.uid);
+    console.log("Logged in UID:", userCredential.user.uid);
+    console.log("Current User:",auth.currentUser);  
     if(!user.emailVerified){
         Alert.alert(
           "Email not verified",

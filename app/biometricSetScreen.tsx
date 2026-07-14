@@ -32,11 +32,16 @@ export default function Biometric(){
       await AsyncStorage.setItem('biometric','true')
             Alert.alert(
                 "Enabled",
-                "Biometric authentication has been enabled"
+                "Biometric authentication has been enabled",
+                [
+                    {
+                        onPress : ()=>router.navigate('/(drawer)/(tabs)')
+
+                    }
+                ]
             )
             setlockstatus('Enabled biometric authentication')
-            router.navigate('/(drawer)/(tabs)');
-    }
+        }
 
 
     const handlecancel=async()=>{

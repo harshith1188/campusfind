@@ -1,19 +1,23 @@
+import { auth } from "@/app/firebase/config";
+import { addpost, getUserDetail } from "@/app/firebase/firestore";
+// import { uploadImage } from "@/app/firebase/storgae";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Label } from "@react-navigation/elements";
 import * as ImagePicker from 'expo-image-picker';
-import { useState } from "react";
+import { router } from "expo-router";
+import { useEffect, useState } from "react";
 import { Alert, Image, ImageBackground, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import ImageViewing from "react-native-image-viewing";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export  default function FoundItems() {
-    const [cate,setcate]=useState(null);
-    const [image,setImage]=useState(null);
+    const [cate,setcate]=useState(""); //item category
+    const [image,setImage]=useState("");//item image
     const[visible,setvisible]=useState(false);    
-    const [date, setDate] = useState(new Date());
-    const[time,setTime]=useState(new Date());
+    const [date, setDate] = useState(new Date());//item  found date
+    const[time,setTime]=useState(new Date());//item found  time
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showTimePicker, setShowTimePicker] = useState(false);
 
@@ -22,8 +26,29 @@ export  default function FoundItems() {
     const[itm_loc,setitm_loc]=useState('');
     const[itm_des,setitm_des]=useState('');
     const[c_num,setc_num]=useState('');
+// user details 
+    const[name,setname]=useState('harshith');
+    const[usn,setusn]=useState('1rr23cs047');
+    const[email,setemail]=useState('harshithkc2027cserrce@gmail.com')
+// loader
+const [loading, setLoading] = useState(false);
+const [item_status,setitem_status]=useState("available");
 
 
+useEffect(() => {
+    const loadUser = async () => {
+        const user = await getUserDetail();
+
+        if (user) {
+            setname(user.name);
+            setusn(user.usn);
+            setemail(user.email);
+            setc_num(user.num);
+        }
+    };
+
+    loadUser();
+}, []);
 
  const handleinputs=async()=>{
     if(!itm_name || !cate || !itm_loc || !itm_des || !c_num){
@@ -33,14 +58,65 @@ export  default function FoundItems() {
         )
         return
     }
-    else{
+
+    else if(!image){
         Alert.alert(
-            "Success",
-            "response  submitted"
+            "Error",
+            "upload the image of found item",
+            
         )
     }
+   else{
+    try{
+        // const imageURL = await uploadImage(image);
+    await   addpost({
+            user_id:auth.currentUser?.uid ?? "",
+            name,
+            email,
+            usn,
+            itemName:itm_name,
+            cate,
+            des:itm_des,
+            loc:itm_loc,
+            date:date.toLocaleDateString(),
+            time:time.toLocaleTimeString(),
+            number:c_num,
+            imgURL:image  ||  '',
+            // imageUrl:imageURL,
+            status:item_status,
+            lostorfound:"found"
+        })
+        Alert.alert(
+            "Success",
+            "found item uploaded successfully",
+            [
+                {
+                
+                    onPress:()=> router.navigate('/(drawer)/(tabs)')
+                }
+            ]
+        )
+    //     setTimeout(()=>{
+    //          router.navigate('/(drawer)/(tabs)');
+    //     },3000)
+        setitm_name('');
+        setitm_loc('');
+        setcate('');
+        setitm_des('');
+        setc_num('');
+        setImage('');
 
- }   
+    }
+    catch(error:any){
+        Alert.alert(
+            "error",
+            error.message
+        );
+    }  
+}
+}
+
+    
 
     //catgeory array of objects for dropdown
     const catogeries=[
@@ -60,7 +136,7 @@ export  default function FoundItems() {
     const addImage=async()=>{
         let result = await ImagePicker.launchCameraAsync({
           mediaTypes:["images"], 
-          aspect:[4,3],
+          aspect:[9,16],
           quality:1,
           allowsEditing:true 
         });
@@ -181,7 +257,7 @@ export  default function FoundItems() {
             )}
 
             <Label style={styles.label}><MaterialIcons name="phone" size={28}/>Contact Information</Label>
-            <TextInput placeholder="Enter your contact information"  maxLength={10} style={styles.input} placeholderTextColor={"rgb(0, 102, 255)"}  keyboardType="number-pad"  value={c_num}  onChangeText={setc_num} />
+            <TextInput  placeholder="Enter your contact information"  style={styles.input} placeholderTextColor={"rgb(0, 102, 255)"}   value={c_num} editable={false} />
 
             <Label style={styles.label}><MaterialIcons name="timer" size={28}/>Time Found (optional)</Label>
             <TouchableOpacity onPress={()=>setShowTimePicker(true)} style={styles.input}>
@@ -206,7 +282,7 @@ export  default function FoundItems() {
                     <Text style={styles.h3}>Your Identity is verified  with your college email</Text>
                     <Text></Text>
                     <Text style={styles.h3}>posting as:</Text>
-                    <Text style={[styles.h3,{fontWeight:'bold'}]}>John1188rrce@gmail.com</Text>
+                    <Text style={[styles.h3,{fontWeight:'bold'}]}>{email}</Text>
                 </View>
             </View>    
 

@@ -18,7 +18,7 @@ export  default function  Help(){
                <Text style={styles.h2}>How to Report an Item</Text>
                <Text style={styles.h3}>Learn how to report lost or found items on CampusFind</Text>
             </View>
-            <TouchableOpacity style={styles.b1_icon2}>
+            <TouchableOpacity style={styles.b1_icon2} onPress={()=>{router.navigate("/report")}}>
               <MaterialIcons name="navigate-next" size={28} color={"rgb(0, 102, 255)"}/>
             </TouchableOpacity>
           </View>
