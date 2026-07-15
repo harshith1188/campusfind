@@ -1,114 +1,170 @@
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { Image, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { onAuthStateChanged } from "firebase/auth";
+import { useEffect, useState } from "react";
+import { Alert, Image, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { auth } from "../firebase/config";
+import { getUserDetail } from "../firebase/firestore";
 export default function ProfileScreen(){
- 
-  return(
-  <ImageBackground source={require("../../assets/images/profile_logo.png")}
-    style={{flex:1}}
-    resizeMode="cover">
-  
-  <SafeAreaView style={{flex:1}}>
-    <ScrollView style={{flex:1}}contentContainerStyle={{alignItems:"center",justifyContent:"space-evenly",padding:70,gap:25}}>
-     
 
-      <View style={styles.v2}>
-        <View style={styles.v2_1}>
-          <Image source={{uri:
-            "https://cdn-icons-png.flaticon.com/512/149/149071.png",
-          }}style={styles.profile}/>
-          <TouchableOpacity style={styles.btn1}>
-            <Ionicons
-            name="camera"
-            size={26}
-            color="white" />
-          </TouchableOpacity>
-        </View>
-      
-      <Text style={styles.t2}>deeksha</Text>
-      <View style={styles.v2_2}>
-        <Text style={styles.t3}>USN:1RR23CS030</Text>
-      </View>
+  const [sname, setSname] = useState("");
+  const [semail, setSemail] = useState("");
+  const [snum, setSnum] = useState("");
+  const [susn, setSusn] = useState("");
+  const [loading, setLoading] = useState(true);
+  const[dept,setdept]=useState('');
+    
+  
+ useEffect(() => {
+
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+
+        if (!user) {
+            console.log("User not restored yet");
+            return;
+        }
+
+        console.log("Logged in UID:", user.uid);
+
+        const data:any = await getUserDetail();
+
+        if (data) {
+            setSname(data.name);
+            setSemail(data.email);
+            setSnum(data.num);
+            setSusn(data.usn);
+            setdept(data.dept);
+            console.log(data.dept);
+        }
+
+        setLoading(false);
+
+    });
+
+    return unsubscribe;
+
+}, []);
+ 
+const  handlepcik=()=>{
+  Alert.alert(
+    "upcoming",
+    "Feature yet to be added"
+  )
+}
+return (
+<ImageBackground
+source={require("../../assets/images/profile_logo.png")}
+style={{ flex: 1 }}
+resizeMode="cover">
+
+<SafeAreaView style={{ flex: 1 }}>
+<ScrollView
+contentContainerStyle={{
+alignItems: "center",
+padding: 20,
+paddingBottom: 40,
+}}
+>
+
+<View style={styles.v2}>
+
+<View style={styles.v2_1}>
+<Image
+source={{
+uri:"https://cdn-icons-png.flaticon.com/512/149/149071.png",
+}}
+style={styles.profile}
+/>
+
+<TouchableOpacity style={styles.btn1} onPress={handlepcik}>
+<Ionicons name="camera" size={25} color="white"/>
+</TouchableOpacity>
+
+</View>
+
+<Text style={styles.t2}>
+{loading ? "Loading..." : sname}
+</Text>
+
+<View style={styles.v2_2}>
+<Text style={styles.t3}>
+USN : {loading ? "..." : susn.toUpperCase()}
+</Text>
+</View>
+
 </View>
 
 <View style={styles.v3}>
-   <View style={styles.v3_1}>
-    <MaterialIcons
-      name="email"
-      size={26}
-      color="#0D6EFD"
-      />
-      <Text style={styles.t4}>Email</Text>
-      <Text style={styles.t5}>deekshadp45@gamil.com</Text>
-   </View>
 
-   <View style={styles.v3_1}>
-      <MaterialIcons
-      name="call"
-      size={26}
-      color="#0D6EFD"
-      />
-      <Text style={styles.t4}>Contact Number</Text>
-      <Text style={styles.t5}>7975207873</Text>
-   </View>
+<View style={styles.v3_1}>
 
-   <View style={styles.v3_1}>
-    <MaterialIcons
-      name="school"
-      size={26}
-      color="#0D6EFD"
-      />
-      <Text style={styles.t4}>Semester</Text>
-      <Text style={styles.t5}>4th Semester</Text>
-   </View>
-
-   <View style={styles.v3_1}>
-    <MaterialIcons
-      name="account-balance"
-      size={26}
-      color="#0D6EFD"
-      />
-      <Text style={styles.t4}>Branch</Text>
-      <Text style={styles.t5}>Computer Science And Engineering</Text>
-   </View>
-
-   <View style={styles.v3_1}>
-    <MaterialIcons
-      name="groups"
-      size={26}
-      color="#0D6EFD"
-      />
-      <Text style={styles.t4}>Section</Text>
-      <Text style={styles.t5}>A</Text>
-   </View>
-
-   <View style={styles.v3_1}>
-    <MaterialIcons
-      name="calendar-month"
-      size={26}
-      color="#0D6EFD"
-      />
-      <Text style={styles.t4}>Year</Text>
-      <Text style={styles.t5}>3rd Year</Text>
-   </View>
+<View style={styles.v3_icon}>
+<MaterialIcons
+name="email"
+size={25}
+color="#0D6EFD"
+/>
 </View>
 
-<TouchableOpacity style={styles.btn2}>
-  <Text style={{fontSize:20,fontWeight:"bold",color:"white"}}><MaterialIcons 
-  name="edit"
-  size={25}
-  color="white"/>Edit Profile</Text>
-</TouchableOpacity>
+<View style={styles.v3_text}>
+<Text style={styles.t4}>Email</Text>
+<Text style={styles.t5}>
+{loading ? "Loading..." : semail}
+</Text>
+</View>
 
-    </ScrollView>
-  </SafeAreaView>
-  
+</View>
 
-      
-    </ImageBackground>
-  )
-}
+<View style={styles.v3_1}>
+
+<View style={styles.v3_icon}>
+<MaterialIcons
+name="call"
+size={25}
+color="#0D6EFD"
+/>
+</View>
+
+<View style={styles.v3_text}>
+<Text style={styles.t4}>Contact Number</Text>
+<Text style={styles.t5}>
+{loading ? "Loading..." : snum}
+</Text>
+</View>
+
+</View>
+
+
+
+{/* department */}
+<View style={styles.v3_1}>
+
+<View style={styles.v3_icon}>
+<MaterialIcons
+name="account-balance"
+size={25}
+color="#0D6EFD"
+/>
+</View>
+
+<View style={styles.v3_text}>
+<Text style={styles.t4}>Branch</Text>
+<Text style={styles.t5}>{dept}</Text>
+</View>
+
+</View>
+
+
+
+</View>
+
+
+</ScrollView>
+</SafeAreaView>
+
+</ImageBackground>
+)}
 
 const styles=StyleSheet.create({
   
@@ -120,7 +176,7 @@ const styles=StyleSheet.create({
     borderRadius: 25,
     alignItems: "center",
     minHeight:250,
-    width:"150%"
+    width:"100%"
     },
 
   v2_1:{
@@ -170,51 +226,56 @@ const styles=StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
   },
-
-
-  v3:{
-    padding:15,
-    backgroundColor: "white",
-    width:"150%",
-    minHeight:430,
-    borderRadius: 20
-    
-  },
-
-  v3_1:{
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 18,
-    borderBottomWidth: 1,
-    borderBottomColor: "#E5E5E5",
-  },
-
-  t4:{
-  width: 120,
-  fontSize: 18,
-  fontWeight: "bold",
-  marginLeft: 10,
+v3: {
+  width: "100%",
+  backgroundColor: "white",
+  borderRadius: 20,
+  padding: 15,
 },
 
-t5:{
+v3_1: {
+  flexDirection: "row",
+  alignItems: "center",
+  paddingVertical: 18,
+  borderBottomWidth: 1,
+  borderBottomColor: "#ECECEC",
+},
+
+v3_icon: {
+  width: 50,
+  height: 50,
+  borderRadius: 12,
+  backgroundColor: "#EAF3FF",
+  justifyContent: "center",
+  alignItems: "center",
+},
+
+v3_text: {
+  marginLeft: 15,
   flex: 1,
-  textAlign: "right",
-  fontSize: 16,
-  color: "black",
 },
- btn2:{
-    width: "150%", 
-    height: 50, 
-    backgroundColor: "rgb(0, 102, 255)",
-    borderRadius:10,
-    alignItems:'center',
-    justifyContent:'center',
-    marginTop:15,
-    borderWidth:1,
-    borderColor:'rgba(255,255,255,0.8)'
-}
-  
+
+t4: {
+  fontSize: 16,
+  fontWeight: "bold",
+  color: "#222",
+},
+
+t5: {
+  marginTop: 4,
+  fontSize: 15,
+  color: "#666",
+},
+
+btn2: {
+  width: "100%",
+  height: 55,
+  marginTop: 20,
+  backgroundColor: "#0D6EFD",
+  borderRadius: 12,
+  justifyContent: "center",
+  alignItems: "center",
+},  
 
 
 })
-

@@ -1,8 +1,61 @@
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BlurView } from "expo-blur";
-import { Image, ImageBackground, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { router } from "expo-router";
+import { useState } from "react";
+import { Alert, Image, ImageBackground, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { loginUser } from "./firebase/auth";
+import { auth } from "./firebase/config";
+
 export default function LoginScreen() {
+ const[email,setEmail]=useState("");
+ const[password,setpassword]=useState("");
+
+ const handlesignin=async()=>{
+  
+  if(!email||!password){
+    Alert.alert(
+      "Error",
+      "Fill All The Fileds"
+    )
+    return 
+  }
+
+  else{
+  
+    try {
+    const userCredential = await loginUser(email,password);
+    const user=userCredential.user
+    await user.reload();
+    console.log("userid",user.uid);
+    console.log("Logged in UID:", userCredential.user.uid);
+    console.log("Current User:",auth.currentUser);  
+    if(!user.emailVerified){
+        Alert.alert(
+          "Email not verified",
+          "please verify ur email"
+        );
+        return;
+    }
+
+    await AsyncStorage.setItem("loggin",'true')
+    Alert.alert(
+      "Success",
+      "login  successful"
+    );
+    router.replace('/(drawer)/(tabs)/foundItemScreen');
+ }
+   catch(error:any){
+
+    Alert.alert(
+     "login failed",
+      error.message
+   );
+  }
+}
+}
+
   return (
     <ImageBackground
       source={require("../assets/images/loginScreen.png")}
@@ -20,14 +73,14 @@ export default function LoginScreen() {
             <Text style={styles.h1}>Welcome Back!</Text>
             <Text style={[styles.h3,{ fontWeight:'bold'}]}>Sign in to your account to continue</Text>
             
-            <TextInput placeholder="Email" style={styles.input} placeholderTextColor={"rgb(0, 102, 255)"} />
-            <TextInput placeholder="Password" style={styles.input} placeholderTextColor={"rgb(0, 102, 255)"}/>
-            <Text style={[styles.h3,{ alignSelf:'flex-end', marginRight:20,color:'rgb(0, 102, 255)', fontWeight:'bold'}]}>Forgot password?</Text>
-            <TouchableOpacity style={styles.btn}>
+            <TextInput placeholder="Email" style={styles.input} placeholderTextColor={"rgb(0, 102, 255)"} onChangeText={setEmail} value={email}/>
+            <TextInput placeholder="Password" style={styles.input} placeholderTextColor={"rgb(0, 102, 255)"}  onChangeText={setpassword} value={password} secureTextEntry/>
+            <Text onPress={()=>{router.navigate('/passwordResetScreen')}} style={[styles.h3,{ alignSelf:'flex-end', marginRight:20,color:'rgb(0, 102, 255)', fontWeight:'bold',textDecorationLine:"underline"}]}>Forgot password?</Text>
+            <TouchableOpacity style={styles.btn} onPress={handlesignin}>
               <Text style={{color:'white', fontSize:20, fontWeight:'bold'}}><Text><MaterialIcons name="login" size={25}/> Sign in</Text></Text>
             </TouchableOpacity>
 
-            <Text style={styles.h3}>don't have an account? <Text style={{color:'rgb(0, 102, 255)', fontWeight:'bold'}}>Sign Up</Text></Text>
+            <Text style={styles.h3}>don't have an account? <Text style={{color:'rgb(0, 102, 255)', fontWeight:'bold'}}  onPress={()=>{router.navigate('/registerScreen')}}>Sign Up</Text></Text>
 
         </BlurView>
         </ScrollView>
