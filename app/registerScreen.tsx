@@ -1,7 +1,7 @@
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { BlurView } from "expo-blur";
 import { Image, ImageBackground, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { BlurView } from "expo-blur";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 export default function RegisterScreen(){
   return(
