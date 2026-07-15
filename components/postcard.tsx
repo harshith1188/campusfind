@@ -1,7 +1,9 @@
+import ImageViewing from "react-native-image-viewing";
 
 import { auth } from "@/app/firebase/config";
 import { deletePost, updateStatus } from "@/app/firebase/firestore";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { useState } from "react";
 import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 
@@ -19,7 +21,7 @@ type PostProps = {
     loc: string;
     date: string;
     time: string;
-    imageUrl: string;
+    imgURL: string;
     status: string;
     lostorfound:string
   };
@@ -101,6 +103,7 @@ const handledelete=async()=>{
     ]
   )
 }
+    const[visible,setvisible]=useState(false);    
 
   return (
     <View style={styles.card}>
@@ -135,12 +138,14 @@ const handledelete=async()=>{
 
 
       {/* Item Image */}
-      {item.imageUrl ? (
+      {item.imgURL ? (
+        <TouchableOpacity onPress={() => setvisible(true)}>
         <Image
-          source={{ uri: item.imageUrl }}
+          source={{ uri: item.imgURL }}
           style={styles.postImage}
           resizeMode="cover"
         />
+        </TouchableOpacity>
       ) : (
         <View style={styles.noImage}>
           <MaterialIcons
@@ -152,6 +157,13 @@ const handledelete=async()=>{
         </View>
       )}
 
+  {item.imgURL && (  
+                <ImageViewing
+                images={[{ uri: item.imgURL }]}
+                imageIndex={0}
+                visible={visible}
+                onRequestClose={() => setvisible(false)}/>
+          )}
       {/* Details */}
       <View style={styles.content}>
 

@@ -1,3 +1,4 @@
+import { uploadImage } from "@/app/firebase/cloudinary";
 import { auth } from "@/app/firebase/config";
 import { addpost, getUserDetail } from "@/app/firebase/firestore";
 // import { uploadImage } from "@/app/firebase/storgae";
@@ -7,7 +8,7 @@ import { Label } from "@react-navigation/elements";
 import * as ImagePicker from 'expo-image-picker';
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { Alert, Image, ImageBackground, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Alert, Image, ImageBackground, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import ImageViewing from "react-native-image-viewing";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -44,6 +45,7 @@ useEffect(() => {
             setusn(user.usn);
             setemail(user.email);
             setc_num(user.num);
+            console.log("user numvbber"+c_num);
         }
     };
 
@@ -68,8 +70,9 @@ useEffect(() => {
     }
    else{
     try{
-        // const imageURL = await uploadImage(image);
-    await   addpost({
+        setLoading(true);
+          const imageURL = await uploadImage(image) ;
+        await   addpost({
             user_id:auth.currentUser?.uid ?? "",
             name,
             email,
@@ -81,8 +84,8 @@ useEffect(() => {
             date:date.toLocaleDateString(),
             time:time.toLocaleTimeString(),
             number:c_num,
-            imgURL:image  ||  '',
-            // imageUrl:imageURL,
+            imgURL:imageURL,
+            
             status:item_status,
             lostorfound:"found"
         })
@@ -96,9 +99,9 @@ useEffect(() => {
                 }
             ]
         )
-    //     setTimeout(()=>{
-    //          router.navigate('/(drawer)/(tabs)');
-    //     },3000)
+         setTimeout(()=>{
+             setLoading(false) ;
+         },4000)
         setitm_name('');
         setitm_loc('');
         setcate('');
@@ -288,7 +291,8 @@ useEffect(() => {
 
             {/* b5     */}
             <TouchableOpacity style={[styles.btn,{backgroundColor:'rgb(0, 102, 255)', marginRight:20}]} onPress={handleinputs} >
-                <Text style={{color:'white', fontSize:20, fontWeight:'bold'}}><Text><MaterialIcons name="post-add" size={25}/> Post Item</Text></Text>
+            { loading ? (<ActivityIndicator size="large" color="white" />) : (<Text style={{color:'white', fontSize:20, fontWeight:'bold'}}><Text><MaterialIcons name="post-add" size={25}/> Post Item</Text></Text>)   }
+                
             </TouchableOpacity>
 
             {/* b6 */}

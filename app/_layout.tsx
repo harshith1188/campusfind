@@ -9,7 +9,6 @@ export default function Layout() {
         <Stack.Screen name="splashscreen" options={{ headerShown: false }}/>
         <Stack.Screen name="powerbyscreen" options={{ headerShown: false }}/>
         <Stack.Screen name="loginScreen"  options={{ headerShown: false }} />
-        <Stack.Screen name="editScreen"  options={{ headerShown: false }} />
         <Stack.Screen name="about"  options={{ headerShown: false }} />
         <Stack.Screen name="help_support"  options={{ headerShown: false }} />
         <Stack.Screen name="faqsScreen"  options={{ headerShown: false }} />
@@ -18,7 +17,7 @@ export default function Layout() {
       <Stack.Screen name="biometricSetScreen"  options={{ headerShown: false }} />
       <Stack.Screen name="biometric"  options={{ headerShown: false }} />
       <Stack.Screen name="report"  options={{ headerShown: false }} />
-          
+      <Stack.Screen name="passwordResetScreen" options={{ headerShown: false }}/> 
       </Stack>
     
   );

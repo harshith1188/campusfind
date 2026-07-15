@@ -75,7 +75,7 @@ export default function LoginScreen() {
             
             <TextInput placeholder="Email" style={styles.input} placeholderTextColor={"rgb(0, 102, 255)"} onChangeText={setEmail} value={email}/>
             <TextInput placeholder="Password" style={styles.input} placeholderTextColor={"rgb(0, 102, 255)"}  onChangeText={setpassword} value={password} secureTextEntry/>
-            <Text style={[styles.h3,{ alignSelf:'flex-end', marginRight:20,color:'rgb(0, 102, 255)', fontWeight:'bold'}]}>Forgot password?</Text>
+            <Text onPress={()=>{router.navigate('/passwordResetScreen')}} style={[styles.h3,{ alignSelf:'flex-end', marginRight:20,color:'rgb(0, 102, 255)', fontWeight:'bold',textDecorationLine:"underline"}]}>Forgot password?</Text>
             <TouchableOpacity style={styles.btn} onPress={handlesignin}>
               <Text style={{color:'white', fontSize:20, fontWeight:'bold'}}><Text><MaterialIcons name="login" size={25}/> Sign in</Text></Text>
             </TouchableOpacity>

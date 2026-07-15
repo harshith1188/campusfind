@@ -19,6 +19,7 @@ export default function Index() {
 
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+    const[visible,setvisible]=useState(false);  
   const [refreshing, setRefreshing] = useState(false);
 
   const loadPosts = async () => {

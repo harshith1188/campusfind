@@ -2,7 +2,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { Image, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Image, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { auth } from "../firebase/config";
 import { getUserDetail } from "../firebase/firestore";
@@ -46,12 +46,17 @@ export default function ProfileScreen(){
 
 }, []);
  
+const  handlepcik=()=>{
+  Alert.alert(
+    "upcoming",
+    "Feature yet to be added"
+  )
+}
 return (
 <ImageBackground
 source={require("../../assets/images/profile_logo.png")}
 style={{ flex: 1 }}
-resizeMode="cover"
->
+resizeMode="cover">
 
 <SafeAreaView style={{ flex: 1 }}>
 <ScrollView
@@ -72,7 +77,7 @@ uri:"https://cdn-icons-png.flaticon.com/512/149/149071.png",
 style={styles.profile}
 />
 
-<TouchableOpacity style={styles.btn1}>
+<TouchableOpacity style={styles.btn1} onPress={handlepcik}>
 <Ionicons name="camera" size={25} color="white"/>
 </TouchableOpacity>
 

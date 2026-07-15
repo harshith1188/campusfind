@@ -1,3 +1,4 @@
+import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from '../firebase/config';
 
 import {
@@ -42,3 +43,9 @@ export const getCurrentUser = () => {
 };
 
 
+//reset password
+export const sendPasswordReset = async (email: string) => {
+
+  await sendPasswordResetEmail(auth, email);
+
+};
