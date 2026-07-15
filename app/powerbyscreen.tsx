@@ -5,19 +5,6 @@ import { useCallback } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-<<<<<<< HEAD
-export default function SettingScreen(){
-    useFocusEffect(
-        useCallback(()=>{
-            const timer=setTimeout(()=>{
-            router.replace("/(drawer)/(tabs)")
-            },3000)
-        return()=>clearTimeout(timer)
-        },[])
-    );
-  return(
-    <SafeAreaView style={{flex:1,alignItems:"center",justifyContent:"center"}}>
-=======
 import { auth } from "./firebase/config";
 
 export default function SettingScreen() {
@@ -62,7 +49,6 @@ export default function SettingScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
->>>>>>> auth-firebase
       <View style={styles.container}>
         <Text style={styles.h1}>Powered By</Text>
 
@@ -80,23 +66,6 @@ export default function SettingScreen() {
   );
 }
 
-<<<<<<< HEAD
-const styles=StyleSheet.create({
-    container:{
-       width:"90%",
-       height:400,
-       alignItems:"center",
-       justifyContent:"space-evenly",
-       borderRadius:5
-    },
-    h1:{
-        fontSize:40,
-        textTransform:'capitalize',
-        fontWeight:'bold',
-    }
-})
-    
-=======
 const styles = StyleSheet.create({
   container: {
     width: "90%",
@@ -110,4 +79,3 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
->>>>>>> auth-firebase
